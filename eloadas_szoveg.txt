@@ -6,105 +6,72 @@
 
 
 ------------------------------------------------------------
-1. BEMUTATKOZÁS ÉS PROJEKTISMERTETŐ               (~3 perc)
+1. BEMUTATKOZÁS ÉS PROJEKTISMERTETŐ               (~1,5 perc)
 ------------------------------------------------------------
 
-[O] Jó napot kívánunk! Seletye Odett vagyok, én a projekt
-frontend részét fejlesztettem, vagyis a felhasználói felületet,
-amit a böngészőben látni lehet.
+[O] Jó napot kívánunk! Seletye Odett vagyok, én a webalkalmazas
+frontend részét készítettem el – ez az a rész, amit
+a böngészőben látni lehet.
 
-[P] Én Péntek Patrik Sándor vagyok, és én a backend oldaláért
-voltam felelős, tehát a szerveroldali logikáért, az adatbázisért
-és az API-ért, amelyen keresztül a frontend kommunikál.
+[P] Én Péntek Patrik Sándor vagyok, én a backend oldalért
+voltam felelős – ez a szerver oldali rész, amelyik az adatokat
+kezeli, tárolja és kiszolgálja a frontendnek.
 
-[O vagy P] A projektünk egy közösségi webalkalmazás, amelynek
-a neve UFO és Paranormális Bejelentő Rendszer. Az ötlet az,
-hogy bárkinek lehetősége legyen feltölteni egy bejelentést,
-ha valami szokatlant tapasztalt – legyen az UFO-észlelés,
-kísérteties jelenség vagy bármi más paranormális esemény.
-A bejelentéshez meg lehet adni a helyszínt egy interaktív
-térképen, le lehet írni mi történt, meg lehet jelölni hány
-tanú volt jelen, és képeket is lehet csatolni.
+[O vagy P] A projektünk neve UFO és Paranormális Bejelentő Rendszer.
+Egy közösségi weboldal, ahol bárki feltölthet egy bejelentést
+ha lát valami szokatlant tapasztalt vagy paranormális eseményt. Meg lehet
+adni a pontos helyszínt egy interaktív térképen, le lehet írni
+mi történt, és képeket is lehet csatolni.
 
-Ami az alkalmazást igazán érdekessé teszi, az a közösségi
-szavazási rendszer: más felhasználók upvote-ot vagy downvote-ot
-adhatnak egy bejelentésre, ezzel egy úgynevezett hitelességi
-pontszámot alakítva ki. Ez a pontszám megmutatja, mennyire
-tartja a közösség valósnak az adott bejelentést.
-
-Az oldal nem teljesen nyilvános abban az értelemben, hogy a
-feltöltött bejelentések nem kerülnek ki azonnal – egy admin
-felhasználó jóváhagyja vagy elutasítja őket, így a tartalom
-moderált és megbízható marad. Az adminnak lehetősége van
-a felhasználókat is kezelni: tiltani, vagy a tiltást feloldani.
-
-A technológiai alapokat tekintve a backend Laravel 12 keretrendszerben
-készült, a frontend pedig Angular 19-ben. A kettő REST API-n
-keresztül kommunikál egymással, a hitelesítés Bearer token
-alapon működik, Laravel Sanctum segítségével.
+[O vagy P] Más felhasználók szavazni tudnak arra, mennyire tartják
+hitelesnek az adott bejelentést – ez egy pontszámot alakít ki,
+tehát minél több a pozitív szavazat, annál megbízhatóbbnak
+látja a közösség az adott bejelentést.
 
 
 ------------------------------------------------------------
-2. FELMERÜLT PROBLÉMÁK ÉS MEGOLDÁSAIK             (~3 perc)
+2. FELMERÜLT PROBLÉMÁK ÉS MEGOLDÁSAIK             (~1,5 perc)
 ------------------------------------------------------------
 
-[P] A fejlesztés során az egyik legnagyobb kihívást a képfeltöltés
-jelentette. A Laravel alapból egy úgynevezett private storage
-mappába menti a feltöltött fájlokat, ami azt jelenti, hogy azokhoz
-közvetlenül nem lehet hozzáférni böngészőből – tehát a képek
-nem jelennek meg a weboldalon.
+[P] Két nagyobb problémánk volt. Az első a képfeltöltéssel
+kapcsolatos: a szerver alapértelmezés szerint egy private storage
+mappába menti a feltöltött képeket, amit a böngésző nem ér el
+közvetlenül – tehát a képek nem jelennek meg a weboldalon.
+Megoldás: a (php artisan storage:link) paranccsal létrehoztunk
+egy hivatkozást a public mappa és a storage között –
+ez egy beépített Laravel parancs, ami egyszer kell lefuttatni,
+és utána a feltöltött képek elérhetővé váltak a weboldalon.
 
-A megoldás az volt, hogy létrehoztunk egy úgynevezett storage
-linket a php artisan storage:link paranccsal. Ez egy szimlinket
-hoz létre a public mappán belül, ami a storage mappára mutat.
-Ettől fogva a feltöltött képek egy egyszerű URL-lel elérhetők,
-és a frontend gond nélkül meg tudja őket jeleníteni. Ez egy
-Laravel-specifikus megoldás, de nagyon elegáns és biztonságos,
-mert a privát fájlok továbbra sem érhetők el közvetlenül.
-
-[O] A másik komoly problémába a térkép integrációjánál futottam
-bele. Az eredeti tervem az volt, hogy Google Maps-et használok,
-de hamar kiderült, hogy a Google Maps API-hoz fizetős regisztráció
-és API kulcs szükséges, ami ingyenesen nagyon limitált kvótával
-működik – ez egy iskolai projekthez nem ideális megoldás.
-
-Ezért váltottam Leaflet.js-re, ami egy nyílt forráskódú térképkönyvtár,
-és OpenStreetMap csempéket használ, tehát teljesen ingyenes, nem
-kell hozzá semmilyen API kulcs. Az integrálása Angular-ba sem volt
-egyszerű, mert a Leaflet közvetlenül a DOM-ot manipulálja, ami
-ütközik Angular változásdetekciójával. Ezt úgy oldottam meg, hogy
-a térkép inicializálását NgZone-on kívülre tettem, így Angular
-nem próbálja folyamatosan újrarenderelni a térképet. Végeredményben
-egy újrafelhasználható app-map komponens lett belőle, ami két módban
-tud működni: csak megjelenítőként, és interaktívan, ahol a felhasználó
-kattintással tud koordinátát kiválasztani.
+[O] A másik probléma a térkép volt. Az eredeti tervem Google Maps
+volt, de az fizetős hozzáférést igényel. Ezért váltottam egy
+ingyenes, nyílt forráskódú kész kódcsomagra, ami a térkép 
+megjelenítését elvégzi helyettünk, a Leaflet.js-re,
+ami az OpenStreetMap adatait használja – ehhez nem kell API kulcs
+sem. (Végeredményben egy újrafelhasználható
+térkép komponens lett belőle, ami kétféleképpen működik:
+nézőként megjelöli a helyszínt, illetve interaktívan hagyja
+a felhasználót kattintással kiválasztani a koordinátát.)
 
 
 ------------------------------------------------------------
-3. MIT TANULTUNK A PROJEKT ALATT?                  (~2 perc)
+3. MIT TANULTUNK A PROJEKT ALATT?                  (~1 perc)
 ------------------------------------------------------------
 
-[O] Számomra a legnagyobb tanulság az volt, hogy egy valós projekten
-mennyivel több a váratlan akadály, mint amit az ember előre gondol.
-Megtanultam, hogyan kell Angular standalone komponenseket felépíteni,
-hogyan működik az OnPush change detection a teljesítmény javítása
-érdekében, és sokat tanultam a HTTP kommunikációról is – például
-hogyan kell egy interceptort írni, ami minden kéréshez automatikusan
-hozzáfűzi az auth tokent. De talán a legfontosabb az volt, hogy
-ha valami nem működik, ne ragadjunk le az eredeti ötletnél – keressük
-meg az alternatívát. Ahogy a Google Maps esetében is tettük.
+[O] Sokat tanultam a nagyobb webes projektek felépítéséről:
+hogyan kell az oldalt modulokra bontani úgy, hogy a böngésző
+csak azt a részt töltse be, amelyre éppen szükség van –
+ez gyorsítja az oldalbetöltést. És persze, hogy ha valami
+nem működik, akkor keress alternatívát – ahogy a Google 
+Maps-et is Leaflet-re cseréltem.
 
-[P] Én a backend oldalon sokat tanultam az API tervezésről és a
-biztonságos végpontok felépítéséről. Az volt az egyik legérdekesebb
-rész, hogyan kell egy middleware láncot megtervezni úgy, hogy minden
-végpont csak annyi jogosultságot kapjon, amennyire szüksége van.
-Fontos tanulság volt a soft delete alkalmazása is: ahelyett, hogy
-fizikailag törölnénk az adatokat az adatbázisból, csak megjelöljük
-töröltként – így az adatintegritás megmarad, és szükség esetén
-visszaállítható. Összességében a projekt során a legtöbbet a
-problémamegoldó képességem fejlődött – amikor elakadtam valamiben,
-meg kellett tanulnom dokumentációt olvasni, hibákat értelmezni
-és önállóan megoldást találni.
+[P] Megtanultam, hogyan kell egy szerver oldali rendszert
+biztonságosan felépíteni: úgy, hogy minden felhasználó
+csak ahhoz férjen hozzá, amihez joga van. Megtanultam
+azt is, hogy törlés során érdemes az adatot nem fizikailag
+kitörölni az adatbázisból, hanem csak láthatatlannak
+jelölni, softdelete-vel, így szükség esetén vissza lehet állítani.
+Összességében a problémamegoldó gondolkodásom fejlődött
+a legtöbbet.
 
 
 ------------------------------------------------------------
@@ -113,188 +80,268 @@ meg kellett tanulnom dokumentációt olvasni, hibákat értelmezni
 
 [O mutatja: slide 1–2]                             (~1 perc)
 
-[Slide 1 – Patrik automatikusan jön, Odett bevezeti:]
+[Slide 1 – Odett bevezeti:]
 Ez a projekt neve és a két fejlesztő neve látható az első dián,
 amit az előbb bemutattunk.
 
 [Slide 2:]
 A második dián látható az, amit az elején elmondtunk: miről szól
-az alkalmazás – közösségi platform, bejelentések, szavazás, admin moderáció.
+az alkalmazás – közösségi platform, bejelentések, szavazás,
+admin moderáció.
 
 
 [P mutatja: slide 3–10]                            (~4 perc)
 
 [Slide 3 – Patrik mondja:]
-A tervezési fázisban először az adatbázis struktúrát és az
-architektúrát kellett meghatározni. Öt fő entitást azonosítottunk:
-felhasználók, kategóriák, bejelentések, képek és szavazatok.
-Fontos volt a bejelentések állapotgépe: egy bejelentés háromféle
-állapotban lehet – függőben, jóváhagyva vagy elutasítva. Ezenkívül
-két szerepkört különböztettünk meg: az egyszerű felhasználót
-és az admin felhasználót.
+A tervezési fázisban először az adatbázis sémát és az alkalmazás
+architektúráját kellett meghatározni. Öt fő entitást azonosítottunk,
+amiket az ER-diagramon is láthatunk: users, categories, reports,
+report_images és votes. Fontos volt a bejelentések státuszgépének
+meghatározása: egy report háromféle állapotban lehet – pending,
+approved vagy rejected. A felhasználói jogosultságrendszert
+két role köré építettük fel: a sima user és az admin szerepkör.
+Ezeket az entitásokat Eloquent modellek képviselik a kódban,
+amik egymás között one-to-many és many-to-one relációkkal
+vannak összekapcsolva.
 
 [Slide 4:]
-A backend technológiai stack: Laravel 12 PHP 8.2 felett, MySQL
-adatbázis, Laravel Sanctum a hitelesítéshez, és Eloquent ORM
-az adatbázis kezeléshez. Az API alap URL-je localhost:8000/api.
+A backend technológiai stackje: Laravel 12 PHP 8.2 felett,
+MySQL relációs adatbázis XAMPP alatt, Laravel Sanctum a stateless
+Bearer token alapú autentikációhoz, és Eloquent ORM a database
+absztrakciós rétegként. Az összes endpoint a localhost:8000/api
+alap URL alatt érhető el.
 
 [Slide 5:]
-Az adatbázis táblák és kapcsolataik láthatók itt. Fontos kiemelni,
-hogy minden fő táblán soft delete van alkalmazva, tehát a törölt
-adatok nem tűnnek el fizikailag az adatbázisból.
+Az adatbázis táblák és az Eloquent kapcsolataik láthatók itt.
+A reports tábla foreign key-ekkel kapcsolódik a users és
+a categories táblához. A report_images és a votes táblák szintén
+cascade delete relációban állnak a reports táblával – tehát
+ha egy bejelentés törlődik, a hozzá tartozó képek és szavazatok
+automatikusan szintén törlődnek, nem maradnak "árva" adatok.
 
 [Slide 6:]
-Az API végpontokat három csoportra osztottuk: publikus végpontok,
-amelyekhez nem kell bejelentkezni, védett végpontok, amelyekhez
-Bearer token szükséges, és admin végpontok, amelyekhez admin
-szerepkör is kell.
+Az API endpointokat három hozzáférési szintre osztottuk.
+Publikus, bejelentkezés nélkül elérhető végpontok: a jóváhagyott
+bejelentések listája, a térkép adatok és a statisztikák –
+tehát ezeket bárki láthatja. Védett végpontok, amelyekhez
+bejelentkezés szükséges: bejelentés létrehozása, szerkesztése,
+szavazás. Admin végpontok, amelyekhez admin jogosultság is kell:
+moderáció, felhasználókezelés, kategória kezelés.
 
 [Slide 7:]
-A biztonság szempontjából három middleware réteg van: az auth:sanctum
-ellenőrzi a tokent, a check.banned megakadályozza a tiltott
-felhasználók hozzáférését, az admin middleware pedig csak adminok
-számára engedi át a kérést az admin végpontokon.
+A biztonság szempontjából egy háromrétegű middleware pipeline
+van felépítve. Az auth:sanctum middleware validálja a Bearer
+tokent és azonosítja a felhasználót. A check.banned middleware
+403-as HTTP státuszkóddal blokkolja a bannolt felhasználók
+kéréseit. Az admin middleware pedig role-alapon engedélyezi
+vagy tiltja a hozzáférést az admin-only végpontokhoz.
 
 [Slide 8:]
-A képfeltöltésnél multipart/form-data formátumot használunk,
-egyszerre maximum tíz kép tölthető fel, darabonként maximum
-öt megabájt méretben. Támogatott formátumok: JPEG, PNG, GIF és WEBP.
+A képfeltöltés multipart/form-data content type-pal történik,
+az images[] tömbmezőben. Server-side validáció gondoskodik arról,
+hogy egyszerre maximum tíz fájl, darabonként maximum öt megabájt
+méretben, és csak JPEG, PNG, GIF vagy WEBP MIME-típusban
+érkezzen kérés.
 
 [Slide 9:]
-A szavazás logikájában három eset lehetséges: ha valaki ugyanolyan
-szavazatot ad le még egyszer, az visszavonódik. Ha ellentétest,
-az felülírja az előzőt. A hitelességi pontszám az upvote-ok
-és downvote-ok különbsége.
+A szavazás idempotens logikával működik: ha egy felhasználó
+ugyanolyan vote_type értékkel szavaz újra, a szavazat forceDelete-tel
+törlődik – azért forceDelete-tel és nem soft delete-tel, mert
+a unique constraint miatt egy soft deleted rekord is blokkolná
+az újraszavazást. Ha ellentétes vote_type érkezik, a rekord
+update-elődik. A credibility score az upvote-ok és downvote-ok
+számának különbsége.
 
 [Slide 10:]
-Az adminnak lehetősége van bejelentéseket jóváhagyni, elutasítani
-és törölni, felhasználókat tiltani vagy a tiltást feloldani,
-valamint kategóriákat kezelni. A tesztelés Postman collectionnel
-és automatizált PHP unit tesztekkel történt.
+Az admin a moderációs felületen tudja kezelni a bejelentéseket:
+jóváhagyás, elutasítás és soft delete. A user management felületen
+kereshet felhasználókra, és ban, illetve unban műveletet hajthat
+végre – adminokat nem lehet bannolni, ezt server-side validáció
+ellenőrzi. A tesztelés Postman collectionnel és PHPUnit alapú
+automatizált feature tesztekkel történt, amelyek az AUTH, REPORT,
+VOTE és ADMIN folyamatokat fedik le.
 
 
 [O mutatja: slide 11–16]                           (~3 perc)
 
 [Slide 11:]
-A frontend technológiai stack: Angular 19 standalone komponensekkel,
-Bootstrap 5.3.3 egy sci-fi stílusú sötét témával, Leaflet.js a
-térképhez, Angular Signals a reaktív állapotkezeléshez, és
-SessionStorage a token és felhasználói adatok tárolásához.
+A frontend technológiai stackje: Angular 19, teljesen standalone
+komponens architektúrával – nincs NgModule, minden oldal önálló
+lazy-loaded komponens. A UI Bootstrap 5.3.3 alapján készült,
+CSS custom property-k felülírásával egy sci-fi stílusú sötét
+témát alakítottunk ki. A térképhez Leaflet.js-t, reaktív
+állapotkezeléshez Angular Signals-t, a munkamenet tárolásához
+pedig sessionStorage-t használunk.
 
 [Slide 12:]
-Az útvonalak, vagyis a route-ok rendszere: a főoldal a bejelentések
-listája, a részletes nézetben térkép, szavazás és képgaléria van.
-A létrehozás és szerkesztés ugyanaz a komponens, csak más módban fut.
-Az admin panel három aloldalból áll: bejelentések, felhasználók, kategóriák.
+Az Angular Router konfigurációjában minden route lazy-loaded:
+a loadComponent callback csak akkor fut le, amikor a felhasználó
+ténylegesen navigál az adott útvonalra, ami csökkenti az initial
+bundle méretet. A ReportForm komponens két route-on is aktív:
+a /reports/create és a /reports/:id/edit útvonalon – egy isEdit
+flag alapján dönti el, melyik módban fusson. Az admin oldalakat
+adminGuard védi, tehát csak admin role-lal rendelkező,
+bejelentkezett felhasználó érheti el.
 
 [Slide 13:]
-Két guard védi a privát oldalakat: az authGuard bejelentkezés
-nélkül a login oldalra irányít, az adminGuard nem admin felhasználóknál
-a főoldalra irányít vissza. Az AuthInterceptor minden HTTP kéréshez
-automatikusan hozzácsatolja a Bearer tokent, így nem kell ezt
-kézzel kezelni. Az AuthService Angular Signal segítségével tárolja
-a bejelentkezett felhasználó adatait, ami azonnal reagál a változásra.
+Két CanActivate guard védi a privát route-okat: az authGuard
+bejelentkezés hiányában a /login oldalra irányít át UrlTree-vel,
+az adminGuard nem admin felhasználót a főoldalra irányít vissza.
+Az authInterceptor egy funkcionális HttpInterceptorFn, amely
+minden kimenő HTTP kérés headerjébe automatikusan beilleszti
+az Authorization: Bearer token értéket. Az AuthService Angular
+Signal-ban tárolja a currentUser objektumot, ami azonnal propagálja
+a változást minden komponensbe, ahol hivatkoznak rá.
 
 [Slide 14:]
-A térkép komponens két módban működik. Megjelenítő módban csak mutatja
-a koordinátát readonly jelleggel, interaktív módban pedig a felhasználó
-kattintással tud helyszínt kiválasztani, amit a form automatikusan
-megkap. Az OnPush change detection és NgZone kombináció a teljesítmény
-optimalizálása miatt fontos.
+Az app-map egy újrafelhasználható standalone komponens, amely
+két Input paraméteren alapulva működik. Ha a clickable Input
+false, read-only megjelenítő módban fut – csak jelzi a koordinátát
+egy Leaflet markerrel. Ha clickable true, a map click eseményre
+feliratkozva az EventEmitteren keresztül visszaadja a kiválasztott
+[lat, lng] tömböt a szülő komponensnek. Az NgZone.runOutsideAngular
+használata megakadályozza a felesleges change detection ciklusokat,
+az invalidateSize() hívás pedig a lazy-loaded konténer méret
+korrekcióját oldja meg.
 
 [Slide 15:]
-A bejelentés létrehozás és szerkesztés ugyanaz a komponens – egy
-isEdit flag dönti el, melyik módban fut. Template-driven formsot
-használunk, a kötelező mezők validálva vannak. Képfeltöltésnél
-előnézet is látható, szerkesztésnél a meglévő képek egyenként törölhetők.
+A ReportForm ugyanaz a komponens a létrehozáshoz és szerkesztéshez –
+az ActivatedRoute snapshot-ból kiolvasott id paraméter alapján
+dönti el az isEdit flag értékét. Template-driven Forms alapú
+validációt alkalmazunk: kötelező mezők, maximum karakterszám,
+és dátum jövőbeli érték tiltása. Képfeltöltésnél FileReader
+API-val generálunk Data URL előnézetet. Szerkesztés módban a
+meglévő images lista jelenik meg, ahol az egyes képek külön
+DELETE kéréssel törölhetők az API-tól.
 
 [Slide 16:]
-A statisztika oldal publikusan elérhető: összesítők, kategória szerinti
-bontás arányos progress barral, top 5 leghitelesebb és a legutóbbi
-5 bejelentés. Az admin panel összefoglalja a moderációs és
-felhasználókezelési funkciókat.
+A statisztika oldal publikus endpointon keresztül összesített
+adatokat jelenít meg: jóváhagyott bejelentések száma, regisztrált
+felhasználók, leadott szavazatok száma. A kategória szerinti
+bontásnál arányos progress bar látható, ahol a legnagyobb
+értéket 100%-nak vesszük és a többi ehhez képest skálázódik.
+Az admin statistics endpoint részletesebb, minden státuszra
+lebontott adatokat szolgáltat, beleértve a bannolt felhasználók
+számát is.
 
 
 ------------------------------------------------------------
-5. WEBOLDAL BEMUTATÁSA ÉLŐBEN                     (~11 perc)
+5. WEBOLDAL BEMUTATÁSA ÉLŐBEN                     (~13 perc)
    (böngészőben, futó alkalmazás – kód nem látható)
 ------------------------------------------------------------
 
-[O mutatja: FRONTEND]                              (~6 perc)
+[O mutatja: FRONTEND]                              (~7 perc)
 
 [Főoldal]
-Most megmutatom az alkalmazás főoldalát. Az oldal tetején látható
-egy slider, ami a top 3 leghitelesebb bejelentést jeleníti meg –
-ez automatikusan vált öt másodpercenként, de manuálisan is léptethető.
-A hitelességi pontszám alapján soroljuk be, hogy melyik kerüljön ide.
+Most megmutatom az alkalmazás főoldalát. Az oldal tetején van
+a navigációs sáv, menü sáv – itt látható, hogy bejelentkezés nélkül csak
+az alap menüpontok érhetők el. Ha bejelentkezünk, két új gomb
+jelenik meg: az „Új bejelentés", amivel feltölthetünk egy
+bejelentést, és a „Profil", ahol a saját bejelentéseinket
+láthatjuk és az adatainkat szerkeszthetjük.
 
-Alatta van a szűrő panel, ahol kategória, dátum intervallum és
-rendezési szempont szerint lehet szűrni a listát. A rendezés
-kategória, dátum, cím és hitelesség szerint is lehetséges.
+A menü alatt látható egy automatikus slider, ami a top 3 legmagasabb
+hitelességű bejelentést jeleníti meg. A slider 5 másodpercenként
+automatikusan vált a következő kártyára – ez TypeScript-ben van
+megvalósítva egy setInterval függvénnyel, ami 5000 milliszekundonként
+lépteti a következő elemre. Ha az egér a slideren van, megáll,
+ha elhagyja, újraindul. 
 
-A bejelentések kártyaformában jelennek meg, oldalanként 9 darab,
-és lapozás is van alul.
+Alatta van a filter panel, ahol kategória, dátum intervallum
+és rendezési szempont szerint lehet szűrni. A szűrők query paraméterként – azaz a webcímbe fűzött
+keresési feltételként – kerülnek az API kérésbe – a rendezés kategória,
+dátum, cím és feltöltési idő szerint is lehetséges, akár
+növekvő, akár csökkenő sorrendben. A szűrők megváltozásakor
+400 ms debounce késleltetéssel indul a kérés – tehát ha gyorsan
+váltogatjuk a szűrőket, nem indul el minden egyes változásnál
+egy új kérés a szerver felé.
+
+A bejelentések kártyaformában, client-side paginationnel
+jelennek meg, oldalanként 9 darab.
 
 [Bejelentés részlete]
 Ha rákattintunk egy bejelentésre, megjelenik a részletes nézet.
-Látható a bejelentés összes adata, és ha meg volt adva helyszín,
-a Leaflet térképen is megjelenik a pontos koordináta.
+Látható a bejelentés összes adata, és ha GPS koordináta is meg-
+volt adva, a Leaflet térkép read-only módban megjelöli a helyszínt.
 
-Bejelentkezett felhasználóként lehet szavazni: az upvote és downvote
-gombokkal. Ha valaki ugyanarra nyom rá még egyszer, visszavonódik
-a szavazata. Ha képek is vannak feltöltve, azok galéria formájában
-jelennek meg, és kattintásra lightbox nézetben nyílnak meg, ahol
-nyíllal lehet lapozni köztük.
+Bejelentkezett felhasználóként lehet szavazni upvote és downvote
+gombokkal – a szavazat leadása után az aktuális pontszám azonnal
+frissül a backend válasza alapján. Ha a felhasználó ugyanolyan
+szavazatot ad le ismét, a szavazat visszavonódik. Ha képek is
+vannak csatolva, azok thumbnailként jelennek meg, kattintásra
+pedig lightbox nézetben nyílakkal kezelhető navigációval.
 
 [Bejelentés létrehozása]
 Bejelentkezett felhasználóként létre lehet hozni új bejelentést.
-Kitöltjük a kötelező mezőket: kategória, cím, leírás, dátum.
-A térképre kattintva automatikusan bekerülnek a koordináták.
-Képeket is lehet feltölteni, és azonnal látható az előnézet.
-A bejelentés feltöltés után „Várakozik" státusszal kerül be,
-az adminnak kell jóváhagynia.
+Kitöltjük a kötelező mezőket: kategória, cím, leírás, esemény dátuma.
+Az interaktív Leaflet térképre kattintva a koordináták automatikusan
+betöltődnek a form latitude és longitude mezőibe az EventEmitter közvetítésével,
+azaz térkép komponens egy eseményen keresztül "elküldi" a kattintott pontot az űrlapnak,
+ami behelyezi a megfelelő mezőkbe. Képeket is fel lehet tölteni, és még feltöltés előtt megjelenik
+egy előnézet – ezt a böngésző beépített FileReader funkciója
+csinálja, ami beolvassa a képfájlt és azonnal megjeleníti. 
+A bejelentés elküldés után pending, azaz várakozó státusszal
+kerül az adatbázisba – tehát egyelőre senki más nem látja –
+és csak admin jóváhagyás után jelenik meg a publikus listában.
 
 [Profil és statisztikák]
-A profil oldalon láthatók a saját adatok és szerkeszthetők,
-valamint a saját bejelentések listája státuszjelzőkkel.
-A statisztika oldalon összesített adatok és grafikonok láthatók.
+A profil oldalon a bejelentkezett felhasználó megtekintheti és
+szerkesztheti saját adatait – nevet, e-mail címet, jelszót.
+Az oldalon látható a saját bejelentések listája is státuszjelzőkkel.
+A statisztika oldal publikusan elérhető, és az API aggregált –
+azaz összesített, több adatból egybegyűjtött – adatait jeleníti meg: 
+összesítők, kategória szerinti bontás
+arányos progress barral, top 5 leghitelesebb és a legutóbbi
+5 bejelentés.
 
 
-[P mutatja: BACKEND LOGIKA az élő oldalon]         (~5 perc)
+[P mutatja: BACKEND LOGIKA az élő oldalon]         (~6 perc)
 
 [Bejelentkezés és validáció]
-Most a backend logikájából mutatok meg néhányat az élő oldalon
-keresztül. Először nézzük a bejelentkezést – ha hibás adatot
-adunk meg, a backend validációs hibaüzenetet küld vissza,
-amit a frontend mezőnként jelenít meg.
+Most a backend logikáját mutatom meg a weboldalon
+keresztül. Először nézzük az autentikációt – ha hibás credentialeket
+küldünk a POST /api/login endpointnak, a backend Laravel Form
+Request validációval hibát küld vissza – ez a 422-es HTTP státuszkód,
+ami azt jelenti, hogy a kérés megérkezett, de az adatok érvénytelenek –,
+a hibákat JSON formátumban, mezőnként strukturálva.
+A frontend ezt a validációs errors objektumot kapja meg,
+és összefűzve jeleníti meg a hibaüzenetet.
 
-Sikeres belépés után a backend visszaad egy Bearer tokent,
-amit a frontend sessionStorage-ban tárol, és minden következő
-API kéréshez automatikusan hozzáfűz az interceptor.
+Sikeres bejelentkezés után a backend egy tokent ad vissza,
+amt a frontend a böngészőben tárol. Minden következő API kérésnél
+azt a tokent automatikusan elküldi a szervernek – tehát
+a szerver így tudja, hogy ki küldi a kérést, és van-e joga hozzá.
 
-Ha egy tiltott felhasználó próbál belépni, a backend 403-as
-státuszkódot küld, és az oldal megfelelő hibaüzenetet jelenít meg.
-
-[Bejelentés lifecycle]
-Új bejelentés feltöltése után jól látható, hogy a státusza
-„Várakozik" – a főoldalon nem jelenik meg, mert az csak a
-jóváhagyott bejelentéseket listázza. Ez a backend oldalon úgy
-van megvalósítva, hogy a publikus lekérés automatikusan szűr
-status = approved feltétellel.
+Ha egy bannolt felhasználó megpróbál belépni, a backend már
+a belépési pontnál visszautasítja a kérést – tehát be sem
+tud lépni, hiába tudja a jelszavát.
 
 [Admin panel]
 Az admin panelen megmutatom a moderációs folyamatot.
-A jóváhagyás gomb megnyomása után a bejelentés státusza approved
-lesz, és azonnal megjelenik a főoldalon. Elutasítás esetén
-rejected státuszt kap, és nem kerül ki.
+Új bejelentés feltöltése után jól látható, hogy a státusza
+pending – a főoldalon nem jelenik meg, mert a szerver
+automatikusan csak az approved, vagyis jóváhagyott státuszú
+bejelentéseket adja vissza – tehát addig senki sem látja,
+amíg az admin nem foglalkozik vele.
+A jóváhagyás gomb megnyomásakor a frontend PUT kérést küld
+a végpontnak, a backend
+frissíti a status mezőt approved, azaz elfogadott értékre, és a bejelentés
+azonnal megjelenik a publikus listában. Elutasítás esetén
+rejected, azaz elutasított státuszt kap és nem kerül ki.
 
-A felhasználókezelő oldalon valós idejű keresés is van: ahogy
-írjuk a nevet vagy az e-mail címet, az API-nak küldött search
-paraméterrel szűr a backend, nem kliens oldalon.
+írjuk a nevet vagy az e-mail címet, az API search
+paraméterrel LIKE alapú SQL keresést futtat – nem kliens oldalon
+szűr, hanem az adatbázis szintjén.
 
-A kategória kezelésnél létrehozás, szerkesztés és törlés is
-lehetséges – és az új kategória azonnal megjelenik a bejelentés
-feltöltő űrlapon is.
+A kategória kezelésnél teljes CRUD elérhető – létrehozás,
+szerkesztés és törlés is. Új kategóriánál és szerkesztésnél
+a rendszer ellenőrzi, hogy ne lehessen két azonos nevű kategória.
+Törlésnél soft delete-et alkalmazunk, ami azt jelenti, hogy
+a kategória nem törlődik ki teljesen az adatbázisból, csak
+láthatatlannak jelölődik – így az ehhez tartozó régi bejelentések
+megmaradnak, és az adat szükség esetén visszaállítható. Az újonnan
+létrehozott kategória azonnal megjelenik a bejelentés feltöltő
+űrlap legördülő listájában is.
 
 
 ------------------------------------------------------------
@@ -305,38 +352,42 @@ feltöltő űrlapon is.
 
 [Slide 17 – Odett mondja:]
 This is a brief English overview of our project. We built a
-community platform where users can report UFO sightings and
-paranormal activities. Reports include location data, a description,
-a category, and optionally photos. Other users can vote on the
-credibility of each report using an upvote and downvote system.
-Admins can moderate the content by approving or rejecting reports
-and managing users. The tech stack is Laravel 12 on the backend
-and Angular 19 on the frontend.
+community-driven web application where users can submit reports
+about UFO sightings and paranormal activities. Each report can
+include GPS coordinates, a description, a category, witness count,
+and optionally attached photos. Other authenticated users can vote
+on the credibility of each report using an upvote and downvote
+system, which produces a credibility score calculated as the
+difference between upvotes and downvotes. Submitted reports go
+through a content moderation workflow: they receive a pending
+status by default and only appear publicly after an admin
+approves them. The tech stack is Laravel 12 REST API on the
+backend and Angular 19 SPA on the frontend.
 
 [Slide 18:]
-On the backend side, we used Laravel's built-in Sanctum package
-for Bearer token authentication. We implemented role-based access
-control with two roles: regular user and admin. Image upload works
-via multipart form data and files are served from Laravel's
-public storage.
+On the backend side, we used Laravel Sanctum for stateless
+Bearer token authentication. We implemented role-based access
+control with two roles: regular user and admin. The middleware
+pipeline consists of three layers: token validation, ban check,
+and role verification. Image upload is handled via multipart
+form-data with server-side MIME type and file size validation,
+and files are served from Laravel's public storage via a
+storage symlink.
 
 [P mutatja: slide 19–20]                           (~1.5 perc)
 
 [Slide 19 – Patrik mondja:]
-On the frontend side, we used Angular 19 with standalone components
-and lazy loading, which means each page only loads when the user
-actually navigates to it. The interactive map is built with Leaflet.js,
-which is a free open-source library using OpenStreetMap tiles.
-Auth guards protect private routes, and an HTTP interceptor
-automatically attaches the Bearer token to every API request.
+On the frontend side, we used Angular 19 with a fully standalone
+component architecture and route-level lazy loading, which means
+each page module is only fetched when the user navigates to it,
+keeping the initial bundle size minimal. The interactive map
+is built with Leaflet.js, a lightweight open-source mapping
+library using OpenStreetMap tiles – no API key required. Route
+access is protected by functional CanActivate guards, and a
+functional HttpInterceptorFn automatically attaches the Bearer
+token to every outgoing HTTP request.
 
-[Slide 20 – záró dia, Patrik vagy Odett:]
+[at the end]
 That concludes our presentation. Thank you for your attention,
 we are happy to answer any questions.
 
-============================================================
-GYORS EMLÉKEZTETŐ – ELŐTTE INDÍTSÁTOK EL:
-  Backend:  php artisan serve    (http://localhost:8000)
-  Frontend: ng serve             (http://localhost:4200)
-  Admin belépés: admin@ufo.hu / password
-============================================================
