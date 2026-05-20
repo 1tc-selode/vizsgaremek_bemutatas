@@ -19,7 +19,7 @@ kezeli, tárolja és kiszolgálja a frontendnek.
 
 [O vagy P] A projektünk neve UFO és Paranormális Bejelentő Rendszer.
 Egy közösségi weboldal, ahol bárki feltölthet egy bejelentést
-ha lát valami szokatlant tapasztalt vagy paranormális eseményt. Meg lehet
+ha lát valami szokatlant vagy paranormális eseményt. Meg lehet
 adni a pontos helyszínt egy interaktív térképen, le lehet írni
 mi történt, és képeket is lehet csatolni.
 
