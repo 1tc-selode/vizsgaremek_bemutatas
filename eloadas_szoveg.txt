@@ -28,6 +28,12 @@ hitelesnek az adott bejelentést – ez egy pontszámot alakít ki,
 tehát minél több a pozitív szavazat, annál megbízhatóbbnak
 látja a közösség az adott bejelentést.
 
+[O vagy P] A webalkalmazást Angular keretrendszerrel készítettem
+a frontend oldalon – ez egy Google által fejlesztett, széles körben
+használt JavaScript keretrendszer, amit azért választottunk, mert
+az iskolában ezt tanultuk. A backend PHP-ban, Laravel keretrendszerrel
+készült, szintén az iskolai tananyag alapján.
+
 
 ------------------------------------------------------------
 2. FELMERÜLT PROBLÉMÁK ÉS MEGOLDÁSAIK             (~1,5 perc)
@@ -57,21 +63,14 @@ a felhasználót kattintással kiválasztani a koordinátát.)
 3. MIT TANULTUNK A PROJEKT ALATT?                  (~1 perc)
 ------------------------------------------------------------
 
-[O] Sokat tanultam a nagyobb webes projektek felépítéséről:
-hogyan kell az oldalt modulokra bontani úgy, hogy a böngésző
-csak azt a részt töltse be, amelyre éppen szükség van –
-ez gyorsítja az oldalbetöltést. És persze, hogy ha valami
-nem működik, akkor keress alternatívát – ahogy a Google 
-Maps-et is Leaflet-re cseréltem.
+[O] Megtanultam, hogyan kell egy nagyobb projektet modulokra
+bontani, és hogy ha valami nem működik, keress alternatívát –
+ahogy a Google Maps-et is Leaflet-re cseréltem.
 
-[P] Megtanultam, hogyan kell egy szerver oldali rendszert
-biztonságosan felépíteni: úgy, hogy minden felhasználó
-csak ahhoz férjen hozzá, amihez joga van. Megtanultam
-azt is, hogy törlés során érdemes az adatot nem fizikailag
-kitörölni az adatbázisból, hanem csak láthatatlannak
-jelölni, softdelete-vel, így szükség esetén vissza lehet állítani.
-Összességében a problémamegoldó gondolkodásom fejlődött
-a legtöbbet.
+[P] Megtanultam, hogyan kell egy szerveroldali rendszert
+biztonságosan felépíteni, és hogy törléskor érdemes az adatot
+nem véglegesen eltávolítani, hanem csak láthatatlannak jelölni.
+Összességében a problémamegoldó gondolkodásom fejlődött a legtöbbet.
 
 
 ------------------------------------------------------------
@@ -345,10 +344,24 @@ létrehozott kategória azonnal megjelenik a bejelentés feltöltő
 
 
 ------------------------------------------------------------
-6. PPT – ANGOL RÉSZ                                (~3 perc)
+5b. JÖVŐBELI FEJLESZTÉSI LEHETŐSÉGEK              (~1 perc)
 ------------------------------------------------------------
 
-[O mutatja: slide 17–18]                           (~1.5 perc)
+[O vagy P] Végezetül pár gondolat arról, hogy mit lehetne
+még hozzáadni a rendszerhez. Az egyik legkézenfekvőbb fejlesztés
+az e-mail verifikáció lenne: jelenleg bárki regisztrálhat
+bármilyen e-mail címmel, egy megerősítő e-mail küldésével
+ez megnehezítené a visszaéléseket.
+
+A másik ötletünk egy névtelen kapcsolatfelvételi űrlap:
+bejelentkezés nélkül is ki lehetne tölteni egy rövid formot
+és üzenetet küldeni az adminoknak – ez hasznos lenne például
+akkor, ha valaki hibajelentést szeretne küldeni, vagy
+egy bejelentéssel kapcsolatban szeretne egyeztetni,
+de nem akar regisztrálni.
+
+
+------------------------------------------------------------
 
 [Slide 17 – Odett mondja:]
 This is a brief English overview of our project. We built a
