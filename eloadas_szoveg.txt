@@ -9,13 +9,7 @@
 1. BEMUTATKOZÁS ÉS PROJEKTISMERTETŐ               (~1,5 perc)
 ------------------------------------------------------------
 
-[O] Jó napot kívánunk! Seletye Odett vagyok, én a webalkalmazas
-frontend részét készítettem el – ez az a rész, amit
-a böngészőben látni lehet.
 
-[P] Én Péntek Patrik Sándor vagyok, én a backend oldalért
-voltam felelős – ez a szerver oldali rész, amelyik az adatokat
-kezeli, tárolja és kiszolgálja a frontendnek.
 
 [O vagy P] A projektünk neve UFO és Paranormális Bejelentő Rendszer.
 Egy közösségi weboldal, ahol bárki feltölthet egy bejelentést
@@ -28,65 +22,36 @@ hitelesnek az adott bejelentést – ez egy pontszámot alakít ki,
 tehát minél több a pozitív szavazat, annál megbízhatóbbnak
 látja a közösség az adott bejelentést.
 
-[O vagy P] A webalkalmazást Angular keretrendszerrel készítettem
+------------------------------------------------------------
+4. PPT – MAGYAR RÉSZ                               (~8 perc)
+------------------------------------------------------------
+[Slide 1]
+
+[O] Jó napot kívánunk! Seletye Odett vagyok, én a webalkalmazas
+frontend részét készítettem el – ez az a rész, amit
+a böngészőben látni lehet.
+
+[P] Én Péntek Patrik Sándor vagyok, én a backend oldalért
+voltam felelős – ez a szerver oldali rész, amelyik az adatokat
+kezeli, tárolja és kiszolgálja a frontendnek.
+
+
+[Slide 2: - Odett mondja:]
+
+A projektünk neve UFO és Paranormális Bejelentő Rendszer.
+Egy közösségi weboldal, ahol bárki feltölthet egy bejelentést
+ha lát valami szokatlant vagy paranormális eseményt. Meg lehet
+adni a pontos helyszínt egy interaktív térképen, le lehet írni
+mi történt, és képeket is lehet csatolni.
+Más felhasználók szavazni tudnak arra, mennyire tartják
+hitelesnek az adott bejelentést – ez egy pontszámot alakít ki,
+tehát minél több a pozitív szavazat, annál megbízhatóbbnak
+látja a közösség az adott bejelentést.
+A webalkalmazást Angular keretrendszerrel készítettem
 a frontend oldalon – ez egy Google által fejlesztett, széles körben
 használt JavaScript keretrendszer, amit azért választottunk, mert
 az iskolában ezt tanultuk. A backend PHP-ban, Laravel keretrendszerrel
 készült, szintén az iskolai tananyag alapján.
-
-
-------------------------------------------------------------
-2. FELMERÜLT PROBLÉMÁK ÉS MEGOLDÁSAIK             (~1,5 perc)
-------------------------------------------------------------
-
-[P] Két nagyobb problémánk volt. Az első a képfeltöltéssel
-kapcsolatos: a szerver alapértelmezés szerint egy private storage
-mappába menti a feltöltött képeket, amit a böngésző nem ér el
-közvetlenül – tehát a képek nem jelennek meg a weboldalon.
-Megoldás: a (php artisan storage:link) paranccsal létrehoztunk
-egy hivatkozást a public mappa és a storage között –
-ez egy beépített Laravel parancs, ami egyszer kell lefuttatni,
-és utána a feltöltött képek elérhetővé váltak a weboldalon.
-
-[O] A másik probléma a térkép volt. Az eredeti tervem Google Maps
-volt, de az fizetős hozzáférést igényel. Ezért váltottam egy
-ingyenes, nyílt forráskódú kész kódcsomagra, ami a térkép 
-megjelenítését elvégzi helyettünk, a Leaflet.js-re,
-ami az OpenStreetMap adatait használja – ehhez nem kell API kulcs
-sem. (Végeredményben egy újrafelhasználható
-térkép komponens lett belőle, ami kétféleképpen működik:
-nézőként megjelöli a helyszínt, illetve interaktívan hagyja
-a felhasználót kattintással kiválasztani a koordinátát.)
-
-
-------------------------------------------------------------
-3. MIT TANULTUNK A PROJEKT ALATT?                  (~1 perc)
-------------------------------------------------------------
-
-[O] Megtanultam, hogyan kell egy nagyobb projektet modulokra
-bontani, és hogy ha valami nem működik, keress alternatívát –
-ahogy a Google Maps-et is Leaflet-re cseréltem.
-
-[P] Megtanultam, hogyan kell egy szerveroldali rendszert
-biztonságosan felépíteni, és hogy törléskor érdemes az adatot
-nem véglegesen eltávolítani, hanem csak láthatatlannak jelölni.
-Összességében a problémamegoldó gondolkodásom fejlődött a legtöbbet.
-
-
-------------------------------------------------------------
-4. PPT – MAGYAR RÉSZ                               (~8 perc)
-------------------------------------------------------------
-
-[O mutatja: slide 1–2]                             (~1 perc)
-
-[Slide 1 – Odett bevezeti:]
-Ez a projekt neve és a két fejlesztő neve látható az első dián,
-amit az előbb bemutattunk.
-
-[Slide 2:]
-A második dián látható az, amit az elején elmondtunk: miről szól
-az alkalmazás – közösségi platform, bejelentések, szavazás,
-admin moderáció.
 
 
 [P mutatja: slide 3–10]                            (~4 perc)
@@ -105,10 +70,13 @@ vannak összekapcsolva.
 
 [Slide 4:]
 A backend technológiai stackje: Laravel 12 PHP 8.2 felett,
-MySQL relációs adatbázis XAMPP alatt, Laravel Sanctum a stateless
-Bearer token alapú autentikációhoz, és Eloquent ORM a database
-absztrakciós rétegként. Az összes endpoint a localhost:8000/api
-alap URL alatt érhető el.
+MySQL adatbázis XAMPP alatt, Laravel Sanctum a token alapú
+autentikációhoz. Az API REST elvek szerint épül fel – azaz minden
+erőforráshoz külön végpont tartozik, amelyek szabványos HTTP
+metódusokkal – GET, POST, PUT, DELETE – érhetők el. A Laravel-t
+azért választottuk, mert beépített megoldásokat kínál a
+leggyakoribb feladatokra anélkül, hogy mindent nulláról kellett
+volna megírni, és a PHP szinte bármilyen tárhelyen fut.
 
 [Slide 5:]
 Az adatbázis táblák és az Eloquent kapcsolataik láthatók itt.
@@ -136,11 +104,15 @@ kéréseit. Az admin middleware pedig role-alapon engedélyezi
 vagy tiltja a hozzáférést az admin-only végpontokhoz.
 
 [Slide 8:]
-A képfeltöltés multipart/form-data content type-pal történik,
-az images[] tömbmezőben. Server-side validáció gondoskodik arról,
-hogy egyszerre maximum tíz fájl, darabonként maximum öt megabájt
-méretben, és csak JPEG, PNG, GIF vagy WEBP MIME-típusban
-érkezzen kérés.
+A képfeltöltésnél az volt a probléma, hogy a szerver private
+storage mappába mentette a képeket, amit a böngésző nem ér el –
+tehát nem jelentek meg. Megoldás az volt, hogy (a php artisan storage:link) paranccsal 
+egy hivatkozást hoztunk létre a public mappa és a storage között, amit egyszer
+kell lefuttatni – utána a képek elérhetők lesznek. A feltöltés a POST /api/reports
+végpontra érkezik multipart/form-data – azaz szöveges adatot és
+fájlokat egyszerre küldő – formátumban, az images[]
+tömbmezőben – egyszerre több fájl is küldhető, maximálisan tíz
+darab, fájlonként öt megabájt, JPEG, PNG, GIF vagy WEBP.
 
 [Slide 9:]
 A szavazás idempotens logikával működik: ha egy felhasználó
@@ -166,11 +138,14 @@ VOTE és ADMIN folyamatokat fedik le.
 [Slide 11:]
 A frontend technológiai stackje: Angular 19, teljesen standalone
 komponens architektúrával – nincs NgModule, minden oldal önálló
-lazy-loaded komponens. A UI Bootstrap 5.3.3 alapján készült,
-CSS custom property-k felülírásával egy sci-fi stílusú sötét
-témát alakítottunk ki. A térképhez Leaflet.js-t, reaktív
-állapotkezeléshez Angular Signals-t, a munkamenet tárolásához
-pedig sessionStorage-t használunk.
+lazy-loaded komponens. Az Angular-t azért választottam, mert
+egy teljes körű keretrendszer – beépített útvonalkezeléssel,
+űrlapkezeléssel és HTTP klienssel –, ami nagyobb projekteknél
+jól strukturált, könnyen bővíthető kódot eredményez. A UI Bootstrap 5.3.3 alapján készült, CSS
+custom property-k felülírásával egy sci-fi stílusú sötét témát
+alakítottunk ki. A térképhez Leaflet.js-t, reaktív állapotkezeléshez
+Angular Signals-t, a munkamenet tárolásához pedig sessionStorage-t
+használunk.
 
 [Slide 12:]
 Az Angular Router konfigurációjában minden route lazy-loaded:
@@ -193,15 +168,13 @@ Signal-ban tárolja a currentUser objektumot, ami azonnal propagálja
 a változást minden komponensbe, ahol hivatkoznak rá.
 
 [Slide 14:]
-Az app-map egy újrafelhasználható standalone komponens, amely
-két Input paraméteren alapulva működik. Ha a clickable Input
-false, read-only megjelenítő módban fut – csak jelzi a koordinátát
-egy Leaflet markerrel. Ha clickable true, a map click eseményre
-feliratkozva az EventEmitteren keresztül visszaadja a kiválasztott
-[lat, lng] tömböt a szülő komponensnek. Az NgZone.runOutsideAngular
-használata megakadályozza a felesleges change detection ciklusokat,
-az invalidateSize() hívás pedig a lazy-loaded konténer méret
-korrekcióját oldja meg.
+A térképnél az eredeti tervem Google Maps volt, de az fizetős
+és API kulcsot igényel. Ezért váltottam a Leaflet.js-re – ez
+ingyenes, nyílt forráskódú, az OpenStreetMap adatait használja,
+és nem kell hozzá API kulcs. Az app-map újrafelhasználható
+komponens, kétféle módban működik: read-only nézetben egy
+markerrel jelöli a koordinátát; interaktív módban a térképre
+kattintva a kiválasztott pontot elküldi az űrlapnak.
 
 [Slide 15:]
 A ReportForm ugyanaz a komponens a létrehozáshoz és szerkesztéshez –
@@ -342,9 +315,21 @@ megmaradnak, és az adat szükség esetén visszaállítható. Az újonnan
 létrehozott kategória azonnal megjelenik a bejelentés feltöltő
 űrlap legördülő listájában is.
 
+------------------------------------------------------------
+6. MIT TANULTUNK A PROJEKT ALATT?                  (~1 perc)
+------------------------------------------------------------
+
+[O] Megtanultam, hogyan kell egy nagyobb projektet modulokra
+bontani, és hogy ha valami nem működik, keress alternatívát –
+ahogy a Google Maps-et is Leaflet-re cseréltem.
+
+[P] Megtanultam, hogyan kell egy szerveroldali rendszert
+biztonságosan felépíteni, és hogy törléskor érdemes az adatot
+nem véglegesen eltávolítani, hanem csak láthatatlannak jelölni.
+Összességében a problémamegoldó gondolkodásom fejlődött a legtöbbet.
 
 ------------------------------------------------------------
-5b. JÖVŐBELI FEJLESZTÉSI LEHETŐSÉGEK              (~1 perc)
+7. JÖVŐBELI FEJLESZTÉSI LEHETŐSÉGEK              (~1 perc)
 ------------------------------------------------------------
 
 [O vagy P] Végezetül pár gondolat arról, hogy mit lehetne
@@ -360,7 +345,8 @@ akkor, ha valaki hibajelentést szeretne küldeni, vagy
 egy bejelentéssel kapcsolatban szeretne egyeztetni,
 de nem akar regisztrálni.
 
-
+------------------------------------------------------------
+8. Angol ppt
 ------------------------------------------------------------
 
 [Slide 17 – Odett mondja:]
@@ -368,7 +354,7 @@ This is a brief English overview of our project. We built a
 community-driven web application where users can submit reports
 about UFO sightings and paranormal activities. Each report can
 include GPS coordinates, a description, a category, witness count,
-and optionally attached photos. Other authenticated users can vote
+and optionally attached photos. Other authenticated/logged in users can vote
 on the credibility of each report using an upvote and downvote
 system, which produces a credibility score calculated as the
 difference between upvotes and downvotes. Submitted reports go
@@ -377,28 +363,29 @@ status by default and only appear publicly after an admin
 approves them. The tech stack is Laravel 12 REST API on the
 backend and Angular 19 SPA on the frontend.
 
-[Slide 18:]
+[Slide 18 – Patrik]
 On the backend side, we used Laravel Sanctum for stateless
 Bearer token authentication. We implemented role-based access
 control with two roles: regular user and admin. The middleware
 pipeline consists of three layers: token validation, ban check,
-and role verification. Image upload is handled via multipart
-form-data with server-side MIME type and file size validation,
-and files are served from Laravel's public storage via a
-storage symlink.
+and role verification. Image upload is a multipart format
+that allows sending both text fields and files in the same request,
+with server-side validation for file type and size. The uploaded
+files are served through a storage symlink – as in, a shortcut
+that makes the private upload folder accessible from the public web.
 
-[P mutatja: slide 19–20]                           (~1.5 perc)
 
-[Slide 19 – Patrik mondja:]
+[Slide 19 – Odett mondja:]
 On the frontend side, we used Angular 19 with a fully standalone
 component architecture and route-level lazy loading, which means
-each page module is only fetched when the user navigates to it,
-keeping the initial bundle size minimal. The interactive map
-is built with Leaflet.js, a lightweight open-source mapping
-library using OpenStreetMap tiles – no API key required. Route
-access is protected by functional CanActivate guards, and a
-functional HttpInterceptorFn automatically attaches the Bearer
-token to every outgoing HTTP request.
+each page module is only fetched when the user navigates to it. 
+The interactive map is built with Leaflet.js, a free open-source 
+mapping library using OpenStreetMap tiles – no API key required. 
+Private pages are protected by Auth guards – as in, code that
+checks if you are logged in before letting you access a page.
+The login token is automatically attached to every request, using 
+HTTP Interceptor, are sent to the server, so the developer does not 
+have to add it manually to every single request in the code.
 
 [at the end]
 That concludes our presentation. Thank you for your attention,
