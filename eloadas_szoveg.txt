@@ -137,19 +137,20 @@ VOTE és ADMIN folyamatokat fedik le.
 
 [Slide 11:]
 A frontend technológiai stackje: Angular 19, teljesen standalone
-komponens architektúrával – nincs NgModule, minden oldal önálló
-lazy-loaded komponens. Az Angular-t azért választottam, mert
-egy teljes körű keretrendszer – beépített útvonalkezeléssel,
-űrlapkezeléssel és HTTP klienssel –, ami nagyobb projekteknél
-jól strukturált, könnyen bővíthető kódot eredményez. A UI Bootstrap 5.3.3 alapján készült, CSS
-custom property-k felülírásával egy sci-fi stílusú sötét témát
-alakítottunk ki. A térképhez Leaflet.js-t, reaktív állapotkezeléshez
-Angular Signals-t, a munkamenet tárolásához pedig sessionStorage-t
-használunk.
+komponens architektúrával. Az Angular-t azért választottam, mert minden szükséges eszköz
+beépítve van – útvonalkezelés, űrlapkezelés, HTTP kommunikáció –,
+nem kellett külön könyvtárakat összekeresgélni. A UI, azaz a felhasználói kinézet
+Bootstrap 5.3.3 alapján készült, CSS-ben az alap változók felülírásával
+egy sci-fi stílusú sötét témát alakítottunk ki. 
+A térképhez Leaflet.js-t használunk. Az Angular Signals-zal kezeljük a bejelentkezett
+felhasználó adatait, például ha kijelentkezik a felhasználó, az összes érintett 
+oldal automatikusan frissül. A munkamenet tárolásához sessionStorage-t használunk, 
+ez a böngészőbe beépített tárolási megoldás, ide kerül a bejelentkezési token,
+és böngészőablak bezárásakor automatikusan törlődik.
 
 [Slide 12:]
 Az Angular Router konfigurációjában minden route lazy-loaded:
-a loadComponent callback csak akkor fut le, amikor a felhasználó
+ami azt jelenti, hogy csak akkor fut le, amikor a felhasználó
 ténylegesen navigál az adott útvonalra, ami csökkenti az initial
 bundle méretet. A ReportForm komponens két route-on is aktív:
 a /reports/create és a /reports/:id/edit útvonalon – egy isEdit
@@ -165,7 +166,7 @@ Az authInterceptor egy funkcionális HttpInterceptorFn, amely
 minden kimenő HTTP kérés headerjébe automatikusan beilleszti
 az Authorization: Bearer token értéket. Az AuthService Angular
 Signal-ban tárolja a currentUser objektumot, ami azonnal propagálja
-a változást minden komponensbe, ahol hivatkoznak rá.
+a változást minden komponensbe, ahol hivatkoznak rá. (slide 11 vege)
 
 [Slide 14:]
 A térképnél az eredeti tervem Google Maps volt, de az fizetős
@@ -177,24 +178,26 @@ markerrel jelöli a koordinátát; interaktív módban a térképre
 kattintva a kiválasztott pontot elküldi az űrlapnak.
 
 [Slide 15:]
-A ReportForm ugyanaz a komponens a létrehozáshoz és szerkesztéshez –
-az ActivatedRoute snapshot-ból kiolvasott id paraméter alapján
-dönti el az isEdit flag értékét. Template-driven Forms alapú
-validációt alkalmazunk: kötelező mezők, maximum karakterszám,
-és dátum jövőbeli érték tiltása. Képfeltöltésnél FileReader
-API-val generálunk Data URL előnézetet. Szerkesztés módban a
-meglévő images lista jelenik meg, ahol az egyes képek külön
-DELETE kéréssel törölhetők az API-tól.
+A ReportForm ugyanaz a komponens a létrehozáshoz és szerkesztéshez
+az URL-ben szereplő azonosítóból dönti el, hogy éppen
+létrehozás vagy szerkesztés módban fut-e. Az űrlap mezőin
+ellenőrzések vannak beállítva – kötelező mezők, maximum karakterszám,
+és dátum jövőbeli érték tiltása. Képfeltöltésnél megjelenik
+egy előnézet, ezt a böngésző beépített FileReader funkciója
+csinálja, ami beolvassa a képfájlt és azonnal megjeleníti.
+Szerkesztés módban a meglévő images lista jelenik meg, ahol 
+az egyes képek külön DELETE kéréssel törölhetők az API-tól.
 
 [Slide 16:]
 A statisztika oldal publikus endpointon keresztül összesített
 adatokat jelenít meg: jóváhagyott bejelentések száma, regisztrált
-felhasználók, leadott szavazatok száma. A kategória szerinti
-bontásnál arányos progress bar látható, ahol a legnagyobb
-értéket 100%-nak vesszük és a többi ehhez képest skálázódik.
-Az admin statistics endpoint részletesebb, minden státuszra
-lebontott adatokat szolgáltat, beleértve a bannolt felhasználók
-számát is.
+felhasználók, leadott szavazatok száma. A kategória szerinti bontásnál 
+arányos progress bar – azaz töltőcsík – látható: TypeScript számolja ki 
+az arányokat, Bootstrap rajzolja ki a csíkot, Angular pedig beköti a 
+kiszámolt százalékot a szélességbe. Az admin panelen táblázatos 
+nézetben látható az összes bejelentés – státusz szerint szűrhető –, 
+az összes felhasználó kereshető és kezelhető, a kategóriák pedig 
+listában jelennek meg szerkesztési és törlési lehetőséggel.
 
 
 ------------------------------------------------------------
