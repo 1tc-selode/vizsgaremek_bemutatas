@@ -61,19 +61,21 @@ Ha egy bejelentés törlődik, a hozzá tartozó képek és szavazatok
 automatikusan szintén törlődnek.
 
 [Slide 6:]
-Az API endpointokat három hozzáférési szintre osztottuk.
-Publikus, bejelentkezés nélkül elérhető végpontok: a jóváhagyott
-bejelentések listája, a térkép adatok és a statisztikák –
-tehát ezeket bárki láthatja. Védett végpontok, amelyekhez
-bejelentkezés szükséges: bejelentés létrehozása, szerkesztése,
-szavazás. Admin végpontok, amelyekhez admin jogosultság is kell:
-moderáció, felhasználókezelés, kategória kezelés.
+Az API endpointokat négy hozzáférési szintre osztottuk.
+Autentikációs, publikus végpontok: a regisztráció és a bejelentkezés. 
+Publikus végpontok: a jóváhagyott bejelentések listája, a térkép adatok és a statisztikák.
+Védett végpontok, amelyekhez bejelentkezés szükséges: bejelentés
+létrehozása, szerkesztése, szavazás. Admin végpontok, amelyekhez
+admin jogosultság is kell: moderáció, felhasználókezelés, kategória kezelés.
 
 [Slide 7:]
-A biztonság szempontjából egy háromrétegű middleware pipeline
-van felépítve: az első ellenőrzi a tokent, a második blokkolja
-a bannolt felhasználókat, a harmadik pedig csak adminoknak
-engedélyezi az admin végpontokat.
+A biztonság szempontjából egy négylépéses folyamat van felépítve.
+Először a regisztráció vagy bejelentkezés után a szerver egy
+Bearer tokent ad vissza. Ezt a tokent ezután a Sanctum middleware
+ellenőrzi minden kérésnél – ha érvénytelen vagy hiányzik, a kérés
+már itt megáll. Utána a check.banned middleware megnézi, hogy
+a felhasználó nincs-e kitiltva. Végül az admin middleware ellenőrzi,
+hogy az adott végponthoz admin jogosultság szükséges-e.
 
 [Slide 8:]
 A képfeltöltésnél az volt a probléma, hogy a szerver private
